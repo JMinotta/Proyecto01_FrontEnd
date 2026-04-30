@@ -1,9 +1,9 @@
 import { useState, useRef } from "react";
 import { Link } from "react-router";
 import { MdStarBorder, MdStar } from "react-icons/md";
-import { useFavorites } from "../context/favoritesContext";
-import { useToast } from "../context/toastContext";
-import ConfirmModal from "../components/confirmModal";
+import { useFavorites } from "../context/FavoritesContext";
+import { useToast } from "../context/ToastContext";
+import ConfirmModal from "../components/ConfirmModal";
 
 export default function Favorites() {
   const { favorites, removeFavorite } = useFavorites();
