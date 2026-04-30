@@ -1,55 +1,83 @@
 import { useParams, useNavigate } from "react-router";
-import { useFetch } from "../hooks/useFetch";
+import {
+  MdArrowBack,
+  MdStar,
+  MdTv,
+  MdEmojiEvents,
+} from "react-icons/md";
 import { useFavorites } from "../context/FavoritesContext";
 import { useToast } from "../context/ToastContext";
-import { useState } from "react";
+import { useRef, useState, useEffect } from "react";
+import ConfirmModal from "../components/ConfirmModal";
 
 function Detail() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const { data, loading, error } = useFetch(
-    `https://api.jikan.moe/v4/anime/${id}`
-  );
-
   const { isFavorite, addFavorite, removeFavorite } = useFavorites();
   const { addToast } = useToast();
 
-  const [showModal, setShowModal] = useState(false);
+  const modalRef = useRef(null);
 
-  const anime = data?.data;
+  const [anime, setAnime] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
   const fav = anime ? isFavorite(anime.mal_id) : false;
 
- 
+  useEffect(() => {
+    const fetchAnime = async () => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        const res = await fetch(`https://api.jikan.moe/v4/anime/${id}`);
+        if (!res.ok) throw new Error("Error al cargar el anime");
+
+        const data = await res.json();
+        setAnime(data.data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAnime();
+  }, [id]);
+
   const handleFavClick = () => {
     if (!anime) return;
 
     if (fav) {
-      setShowModal(true); 
+      modalRef.current?.open(); 
     } else {
       addFavorite(anime);
-      addToast(`"${anime.title}" agregado a favoritos`);
+      addToast(`"${anime.title}" agregado a favoritos`, "success");
     }
   };
 
   const confirmRemove = () => {
     removeFavorite(anime.mal_id);
-    addToast(`"${anime.title}" eliminado de favoritos`);
-    setShowModal(false);
+    addToast(`"${anime.title}" eliminado de favoritos`, "info");
   };
 
   return (
     <section className="bg-[#0f172a] text-white py-16 px-4 min-h-screen">
-
+      
       <button
-        onClick={() => navigate("/explorar")}
-        className="bg-[#e94560] px-6 py-2 rounded-full font-semibold hover:opacity-90 transition mb-6"
+        onClick={() => navigate(-1)}
+        className="flex items-center gap-2 bg-[#e94560] px-6 py-2 rounded-full font-semibold hover:opacity-90 transition mb-6"
+        aria-label="Volver a explorar"
       >
-        ← Volver
+        <MdArrowBack size={18} /> Volver
       </button>
 
       {loading && <p className="text-center">Cargando...</p>}
-      {error && <p className="text-center text-red-500">{error}</p>}
+
+      {error && (
+        <p className="text-center text-red-500">{error}</p>
+      )}
 
       {!loading && !error && anime && (
         <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-10">
@@ -68,6 +96,7 @@ function Detail() {
                   ? "bg-gray-600 hover:bg-gray-500"
                   : "bg-[#e94560] hover:bg-[#ff2e63]"
               }`}
+              aria-label="Agregar o quitar de favoritos"
             >
               {fav ? "Quitar de favoritos" : "Agregar a favoritos"}
             </button>
@@ -79,18 +108,18 @@ function Detail() {
             </h1>
 
             <p className="text-sm text-gray-400 mb-4">
-              {anime.title_english}
+              {anime.title_english || anime.title}
             </p>
 
             <div className="flex gap-4 flex-wrap mb-6">
-              <span className="bg-[#1a1a2e] px-3 py-1 rounded">
-                ⭐ {anime.score || "N/A"}
+              <span className="bg-[#1a1a2e] px-3 py-1 rounded flex items-center gap-1">
+                <MdStar size={16} /> {anime.score || "N/A"}
               </span>
-              <span className="bg-[#1a1a2e] px-3 py-1 rounded">
-                📺 {anime.episodes || "?"} eps
+              <span className="bg-[#1a1a2e] px-3 py-1 rounded flex items-center gap-1">
+                <MdTv size={16} /> {anime.episodes || "?"} eps
               </span>
-              <span className="bg-[#1a1a2e] px-3 py-1 rounded">
-                🏆 #{anime.rank || "?"}
+              <span className="bg-[#1a1a2e] px-3 py-1 rounded flex items-center gap-1">
+                <MdEmojiEvents size={16} /> #{anime.rank || "?"}
               </span>
             </div>
 
@@ -119,39 +148,14 @@ function Detail() {
         </div>
       )}
 
-      {/* 🔥 MODAL */}
-      {showModal && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-
-          <div className="bg-white text-black rounded-lg p-6 w-[300px] text-center">
-            <h2 className="font-bold text-lg mb-3">
-              ¿Eliminar favorito?
-            </h2>
-
-            <p className="text-sm text-gray-600 mb-5">
-              ¿Seguro que quieres quitar "{anime?.title}"?
-            </p>
-
-            <div className="flex justify-center gap-3">
-              <button
-                onClick={() => setShowModal(false)}
-                className="px-3 py-1 rounded bg-gray-300"
-              >
-                Cancelar
-              </button>
-
-              <button
-                onClick={confirmRemove}
-                className="px-3 py-1 rounded bg-red-500 text-white hover:bg-red-600"
-              >
-                Sí, quitar
-              </button>
-            </div>
-          </div>
-
-        </div>
-      )}
-
+      <ConfirmModal
+        ref={modalRef}
+        title="¿Eliminar favorito?"
+        message={`¿Seguro que quieres quitar "${anime?.title ?? ""}"?`}
+        confirmLabel="Sí, quitar"
+        cancelLabel="Cancelar"
+        onConfirm={confirmRemove}
+      />
     </section>
   );
 }

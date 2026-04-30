@@ -1,4 +1,4 @@
-import { forwardRef, useImperativeHandle, useState } from 'react'
+import { forwardRef, useImperativeHandle, useRef } from "react";
 
 const ConfirmModal = forwardRef(function ConfirmModal(
   {
@@ -6,59 +6,48 @@ const ConfirmModal = forwardRef(function ConfirmModal(
     message = "¿Estás seguro?",
     confirmLabel = "Confirmar",
     cancelLabel = "Cancelar",
-    onConfirm = () => {}
+    onConfirm = () => {},
   },
-  ref
+  ref,
 ) {
-  const [isOpen, setIsOpen] = useState(false)
+  const dialogRef = useRef();
 
-  // Permite abrir/cerrar desde el padre
   useImperativeHandle(ref, () => ({
-    open: () => setIsOpen(true),
-    close: () => setIsOpen(false),
-  }))
+    open: () => dialogRef.current.showModal(),
+    close: () => dialogRef.current.close(),
+  }));
 
   const handleConfirm = () => {
-    onConfirm()
-    setIsOpen(false)
-  }
-
-  if (!isOpen) return null
+    onConfirm();
+    dialogRef.current.close();
+  };
 
   return (
-    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-      
-      <div className="bg-white rounded-xl p-6 w-[320px] text-center shadow-xl">
-        
-        <h2 className="text-lg font-bold mb-3">
-          {title}
-        </h2>
+    <dialog
+      ref={dialogRef}
+      className="rounded-xl p-6 w-[320px] text-center shadow-xl top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 fixed"
+    >
+      <h2 className="text-lg font-bold mb-3">{title}</h2>
 
-        <p className="text-sm text-gray-600 mb-6">
-          {message}
-        </p>
+      <p className="text-sm text-gray-600 mb-6">{message}</p>
 
-        <div className="flex justify-center gap-3">
-          
-          <button
-            onClick={() => setIsOpen(false)}
-            className="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-sm"
-          >
-            {cancelLabel}
-          </button>
+      <div className="flex justify-center gap-3">
+        <button
+          onClick={() => dialogRef.current.close()}
+          className="px-4 py-2 rounded bg-gray-300"
+        >
+          {cancelLabel}
+        </button>
 
-          <button
-            onClick={handleConfirm}
-            className="px-4 py-2 rounded bg-red-500 hover:bg-red-600 text-white text-sm font-semibold"
-          >
-            {confirmLabel}
-          </button>
-
-        </div>
-
+        <button
+          onClick={handleConfirm}
+          className="px-4 py-2 rounded bg-red-500 text-white"
+        >
+          {confirmLabel}
+        </button>
       </div>
-    </div>
-  )
-})
+    </dialog>
+  );
+});
 
-export default ConfirmModal
+export default ConfirmModal;

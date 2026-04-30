@@ -1,16 +1,54 @@
-# React + Vite
+#  AnimeFront
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicación web desarrollada con React que permite explorar animes, ver detalles y guardar favoritos.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+##  Funcionalidades
 
-## React Compiler
+* Búsqueda de animes en tiempo real
+* Filtro por género
+* Vista de detalle de cada anime
+* Favoritos
+* Modal de confirmación para eliminar favoritos
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## Tecnologías usadas
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+* React
+* React Router
+* Tailwind CSS
+* React Icons
+* React Toastify
+* API: Jikan (MyAnimeList)
+
+---
+
+## Estructura básica
+
+* `pages/` → vistas principales (Explore, Detail, Favorites, etc.)
+* `components/` → componentes reutilizables (Navbar, Modal, Toast, etc.)
+* `context/` → manejo de estado global (favoritos, toast)
+
+---
+
+## Instalación
+
+```bash
+npm install
+npm run dev
+```
+
+---
+
+## Uso
+
+1. Explora animes en la sección **Explorar**
+2. Filtra por género o busca por nombre
+3. Haz clic en un anime para ver detalles
+4. Agrega o elimina favoritos
+
+
+
+Proyecto 01 Desarrollo Web FrontEnd

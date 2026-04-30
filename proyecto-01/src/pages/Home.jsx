@@ -1,4 +1,5 @@
 import { Link } from "react-router";
+import { MdSearch, MdFavoriteBorder, MdShowChart } from 'react-icons/md';
 
 export default function Home() {
   return (
@@ -69,7 +70,7 @@ export default function Home() {
         <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto px-4">
           
           <div className="bg-white p-6 rounded-lg shadow flex flex-col gap-3">
-            <span className="text-3xl">🔍</span>
+            <MdSearch size={36} color="#333" />
             <h3 className="font-semibold">Buscar y filtrar</h3>
             <p className="text-sm text-gray-500">
               Encuentra cualquier anime por nombre en tiempo real.
@@ -77,7 +78,7 @@ export default function Home() {
           </div>
 
           <div className="bg-white p-6 rounded-lg shadow flex flex-col gap-3">
-            <span className="text-3xl">❤️</span>
+            <MdFavoriteBorder size={36} color="#e94560" />
             <h3 className="font-semibold">Guardar favoritos</h3>
             <p className="text-sm text-gray-500">
               Agrega series a tu lista personal fácilmente.
@@ -85,7 +86,7 @@ export default function Home() {
           </div>
 
           <div className="bg-white p-6 rounded-lg shadow flex flex-col gap-3">
-            <span className="text-3xl">📊</span>
+            <MdShowChart size={36} color="#333" />
             <h3 className="font-semibold">Ver detalles</h3>
             <p className="text-sm text-gray-500">
               Score, episodios, géneros y sinopsis completa.
