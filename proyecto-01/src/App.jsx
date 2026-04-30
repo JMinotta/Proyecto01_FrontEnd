@@ -1,13 +1,13 @@
 import { Routes, Route } from "react-router";
-import Layout from "./components/Layout";
+import Layout from "./components/layout";
 import Home from "./pages/home";
-import N404 from "./pages/N404";
-import Explore from "./pages/Explore";
-import Detail from "./pages/Detail";
-import { FavoritesProvider } from "./context/FavoritesContext";
-import ToastContainer from "./components/Toast";
-import Favorites from "./pages/Favorites";
-import Contact from "./pages/Contact";
+import N404 from "./pages/n404";
+import Explore from "./pages/explore";
+import Detail from "./pages/detail";
+import { FavoritesProvider } from "./context/favoritesContext";
+import ToastContainer from "./components/toast";
+import Favorites from "./pages/favorites";
+import Contact from "./pages/contact";
 
 function App() {
   return (
