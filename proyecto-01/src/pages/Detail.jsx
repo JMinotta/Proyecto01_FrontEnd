@@ -5,10 +5,10 @@ import {
   MdTv,
   MdEmojiEvents,
 } from "react-icons/md";
-import { useFavorites } from "../context/FavoritesContext";
-import { useToast } from "../context/ToastContext";
+import { useFavorites } from "../context/favoritesContext";
+import { useToast } from "../context/toastContext";
 import { useRef, useState, useEffect } from "react";
-import ConfirmModal from "../components/ConfirmModal";
+import ConfirmModal from "../components/confirmModal";
 
 function Detail() {
   const { id } = useParams();
